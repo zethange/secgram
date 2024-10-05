@@ -48,27 +48,41 @@ export const MainView = () => {
           break;
         case 8:
           // online
-          let c = chats.get().map(chat => {
+          chats.set(JSON.parse(JSON.stringify(chats.get().map(chat => {
             if (chat.type != 'private') return chat
             const s = chat.members[0]
             if (s.id == data.user_online.user_id) {
+              console.log(chat)
               chat.online = true
             }
             return chat
-          })
-          chats.set(c)
+          }))))
+
+          if (currentChat.get()?.members[0].id == data.user_online.user_id) {
+            currentChat.set({
+              ...(currentChat.get() as ChatType),
+              online: true
+            })
+          }
+
           break
         case 9:
           // offline
-          let c2 = chats.get().map(chat => {
+          chats.set(JSON.parse(JSON.stringify(chats.get().map(chat => {
             if (chat.type != 'private') return chat
             const s = chat.members[0]
             if (s.id == data.user_offline.user_id) {
               chat.online = false
             }
             return chat
-          })
-          chats.set(c2)
+          }))))
+
+          if (currentChat.get()?.members[0].id == data.user_offline.user_id) {
+            currentChat.set({
+              ...(currentChat.get() as ChatType),
+              online: false
+            })
+          }
 
           break
       }
@@ -92,8 +106,8 @@ export const MainView = () => {
     <div class="flex">
       <Show when={!isMobile() || !chat()}>
         <div class="border-r flex flex-col h-[100dvh] md:min-w-[350px] max-md:w-[100dvw]">
-          <div class="h-[50px] p-1 flex gap-1 items-center w-full border-b bg-slate-50">
-            <Input placeholder="Поиск..." />
+          <div class="h-[50px] p-1 flex gap-1 items-center w-full">
+            <Input placeholder="Поиск..." class='rounded-xl' />
             <div style={{ color: isConnected() ? "green" : "red" }}>///</div>
           </div>
           <div class="p-1 h-full">
@@ -111,12 +125,11 @@ export const MainView = () => {
                 >
                   <div
                     class="rounded-full p-4 w-12 h-12 flex items-center justify-center text-white"
-                    style={{ background: generateGradient(iterChat.name) }}
+                    style={{ background: generateGradient(iterChat.name), border: '1px solid ' + (iterChat.online ? 'green' : 'red') }}
                   >
                     {iterChat.name.at(0)}
                   </div>
                   <span>{iterChat.name}</span>
-                  <span class='w-2 h-2 rounded-full' style={{background: iterChat.online ? 'green' : 'red'}}></span>
                 </button>
               )}
             </For>

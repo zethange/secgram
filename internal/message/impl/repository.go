@@ -36,7 +36,7 @@ func (r *PostgresRepository) GetByChatId(chatId, userId, limit, page uint64) ([]
 			WHERE m.chat_id = $1
 			AND cu.user_id = $4
 			ORDER BY m.created_at DESC
-			LIMIT $2 OFFSET $3
+			LIMIT $2 OFFSET $3	
 		`, chatId, limit, offset, userId)
 
 	return messages, err

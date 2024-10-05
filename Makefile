@@ -1,5 +1,5 @@
 run:
-	go run ./cmd/api/main.go
+	make build && ./secgram
 build:
 	go build -o secgram -ldflags="-s -w" ./cmd/api/main.go
 

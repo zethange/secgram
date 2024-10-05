@@ -72,11 +72,17 @@ export const Chat: Component<ChatProps> = (props) => {
 
   return (
     <div class="bg-slate-50 w-[100dvw] h-[100dvh] relative">
-      <div class="h-[50px] bg-white border-b flex gap-2 items-center p-1">
+      <div class="h-[50px] bg-white border-b flex gap-2 items-center p-3">
         <Show when={props.isMobile}>
           <Button onClick={() => currentChat.set(undefined)}>{"<"}</Button>
         </Show>
-        {chat() ? chat()?.name : "Выберите чат"}
+        <div class="flex flex-col">
+          <span>{chat() ? chat()?.name : "Выберите чат"}</span>
+
+          <Show when={chat()}>
+            <span class='text-sm text-gray-600'>{chat()?.online ? 'В сети' : 'Был(а) недавно'}</span>
+          </Show>
+        </div>
       </div>
       <div class="w-full">
         <div
@@ -86,7 +92,7 @@ export const Chat: Component<ChatProps> = (props) => {
         >
           <For each={chat()?.messages ?? []}>
             {(message) => (
-              <div class="p-2 w-full hover:bg-white rounded-lg flex items-center gap-2">
+              <div class="p-2 w-full hover:bg-white flex items-center gap-2">
                 <div
                   class="h-12 w-12 flex items-center justify-center text-white rounded-full"
                   style={{
@@ -110,6 +116,7 @@ export const Chat: Component<ChatProps> = (props) => {
         <Show when={chat()}>
           <div class="absolute flex gap-2 bottom-2 w-full px-2">
             <Input
+              class='rounded-full'
               value={message()}
               onKeyDown={(e) => {
                 if (e.key == "Enter") {
